@@ -1,12 +1,27 @@
 @for (team of teams(); track team.publicKey) {
-<p>{{team.poule}}:
-  <span (click)="clicked(team.publicKey)">{{team.name}}</span>
-</p>
+  <p>
+    {{ team.poule }}:
+    <span (click)="clicked(team.publicKey)">{{ team.name }}</span>
+  </p>
 }
 
 <br />
-{{ selectedTeam().publicKey === null ? 'No team selected' : 'Selected team: ' + selectedTeam().name }}
+{{
+  selectedTeam().publicKey === null ? 'No team selected' : 'Selected team: ' + selectedTeam().name
+}}
 <br />Sorting:
-<input type="button" [value]="sortField" (click)="sortField = sortField === 'name' ? 'poule' : 'name';" />
-<input type="button" [value]="sortDirection" (click)="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';" />
-<input type="button" value="Go" (click)="sortOn.emit({ key: sortField, direction: sortDirection })" />
+<input
+  type="button"
+  [value]="sortField"
+  (click)="sortField = sortField === 'name' ? 'poule' : 'name'"
+/>
+<input
+  type="button"
+  [value]="sortDirection"
+  (click)="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'"
+/>
+<input
+  type="button"
+  value="Go"
+  (click)="sortOn.emit({ key: sortField, direction: sortDirection })"
+/>
