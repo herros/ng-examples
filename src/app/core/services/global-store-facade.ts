@@ -8,6 +8,7 @@ export class GlobalStoreFacade {
   public get title(): Signal<string> {
     return this.store.title;
   }
+
   public set title(value: string) {
     this.store.setTitle(value);
   }

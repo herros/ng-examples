@@ -1,33 +1,44 @@
-const js = require('@eslint/js');
-const prettierConfig = require('eslint-config-prettier');
-const angularTemplateParser = require('@angular-eslint/template-parser');
-const angularTemplatePlugin = require('@angular-eslint/eslint-plugin-template');
-const tseslint = require('typescript-eslint');
+// @ts-check
+const eslint = require("@eslint/js");
+const { defineConfig } = require("eslint/config");
+const tseslint = require("typescript-eslint");
+const angular = require("angular-eslint");
 
-module.exports = [
+module.exports = defineConfig([
   {
-    ignores: ['coverage/**', 'dist/**', 'node_modules/**', 'out-tsc/**'],
-  },
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-  {
-    files: ['**/*.ts'],
+    files: ["**/*.ts"],
+    extends: [
+      eslint.configs.recommended,
+      tseslint.configs.recommended,
+      tseslint.configs.stylistic,
+      angular.configs.tsRecommended,
+    ],
+    processor: angular.processInlineTemplates,
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
+      "@angular-eslint/directive-selector": [
+        "error",
+        {
+          type: "attribute",
+          prefix: "app",
+          style: "camelCase",
+        },
+      ],
+      "@angular-eslint/component-selector": [
+        "error",
+        {
+          type: "element",
+          prefix: "app",
+          style: "kebab-case",
+        },
+      ],
     },
   },
   {
-    files: ['**/*.html'],
-    languageOptions: {
-      parser: angularTemplateParser,
-    },
-    plugins: {
-      '@angular-eslint/template': angularTemplatePlugin,
-    },
-    rules: {
-      '@angular-eslint/template/no-negated-async': 'error',
-    },
-  },
-  prettierConfig,
-];
+    files: ["**/*.html"],
+    extends: [
+      angular.configs.templateRecommended,
+      angular.configs.templateAccessibility,
+    ],
+    rules: {},
+  }
+]);

@@ -15,6 +15,13 @@ export interface SortState<T> {
   sortDirection: SortDirection;
 }
 
+type SortingStoreContract<T> = {
+  sortKey: () => keyof T | null;
+  sortDirection: () => SortDirection;
+};
+
+type SignalSelectorStore<T> = SortingStoreContract<T> & T[];
+
 /**
  * A reusable SignalStore feature to sort an array.
  * @param dataSelector A function that selects the signal array to be sorted from the store.
@@ -76,7 +83,7 @@ export function withSorting<T>(dataSelector: (store: any) => () => T[]) {
           : currentKey === key && currentDirection === 'asc'
             ? 'desc'
             : 'asc';
-        patchState(store, { sortKey: key as any, sortDirection: nextDirection });
+        patchState(store, { sortKey: key as keyof T | null, sortDirection: nextDirection });
       },
       clearSort(): void {
         patchState(store, { sortKey: null, sortDirection: 'asc' });

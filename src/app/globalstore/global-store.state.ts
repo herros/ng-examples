@@ -1,8 +1,8 @@
 import { withState } from '@ngrx/signals';
 
-export type IGlobalStoreState = {
+export interface IGlobalStoreState {
   title: string;
-};
+}
 
 const initialState: IGlobalStoreState = {
   title: '',

@@ -1,10 +1,10 @@
 import { Team } from '@models/team';
 import { withState } from '@ngrx/signals';
 
-export type ITeamState = {
+export interface ITeamState {
   teams: Team[];
   selectedKey: string | undefined;
-};
+}
 
 const initialState: ITeamState = {
   teams: [],

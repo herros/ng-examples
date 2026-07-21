@@ -1,12 +1,10 @@
-import { Component, signal } from '@angular/core';
-import { TeamContainer } from '@features/teams/components/container/team-container';
+import { Component } from '@angular/core';
+import { TeamEntrypoint } from '@features/teams/team-entrypoint';
 
 @Component({
   selector: 'app-root',
-  imports: [TeamContainer],
+  imports: [TeamEntrypoint],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
-  protected readonly title = signal('pool');
-}
+export class App {}

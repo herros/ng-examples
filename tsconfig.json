@@ -20,7 +20,8 @@
       "@services/*": ["./src/app/core/services/*"],
       "@features/*": ["./src/app/features/*"],
       "@app/*": ["./src/app/*"]
-    }
+    },
+    "forceConsistentCasingInFileNames": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

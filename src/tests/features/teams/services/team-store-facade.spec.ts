@@ -5,10 +5,13 @@ import { TeamStore } from '@features/teams/store/team.store';
 import { Team } from '@models/team';
 import { teamFactory } from '../../../shared/factories/team-factory';
 
-const teams = teamFactory.buildList(2);
+// The store always sorts the teams on name immediately, so we have to do that too
+const teams = teamFactory
+  .buildList(2)
+  .sort((a, b) => (a.name as string).localeCompare(b.name as string));
 
-async function setup() {
-  const getAll = vi.fn().mockResolvedValue(teams);
+async function setup(customTeams: Team[] = teams) {
+  const getAll = vi.fn().mockResolvedValue(customTeams);
 
   TestBed.configureTestingModule({
     providers: [
@@ -48,6 +51,7 @@ describe('TeamStoreFacade', () => {
 
   it('should expose the teams signal', async () => {
     const { facade } = await setup();
+    // const teams1 = [...teams].sort((a, b) => (a.name as string).localeCompare(b.name as string));
 
     expect(facade.teams()).toEqual(teams);
   });
@@ -75,5 +79,33 @@ describe('TeamStoreFacade', () => {
 
     expect(currentTeams).toEqual(teams);
     expect(getAll).toHaveBeenCalledWith(true);
+  });
+
+  it('should sort teams by name descending', async () => {
+    const fixedTeams: Team[] = [
+      { publicKey: '1', name: 'Alpha', type: '', poule: 'B' },
+      { publicKey: '2', name: 'Zulu', type: '', poule: 'A' },
+      { publicKey: '3', name: 'Mike', type: '', poule: 'C' },
+    ];
+
+    const { facade } = await setup(fixedTeams);
+
+    facade.sortOn({ key: 'name', direction: 'desc' });
+
+    expect(facade.teams().map((team) => team.name)).toEqual(['Zulu', 'Mike', 'Alpha']);
+  });
+
+  it('should sort teams by poule ascending', async () => {
+    const fixedTeams: Team[] = [
+      { publicKey: '1', name: 'Alpha', type: '', poule: 'B' },
+      { publicKey: '2', name: 'Zulu', type: '', poule: 'A' },
+      { publicKey: '3', name: 'Mike', type: '', poule: 'C' },
+    ];
+
+    const { facade } = await setup(fixedTeams);
+
+    facade.sortOn({ key: 'poule', direction: 'asc' });
+
+    expect(facade.teams().map((team) => team.poule)).toEqual(['A', 'B', 'C']);
   });
 });

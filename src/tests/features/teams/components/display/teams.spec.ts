@@ -13,11 +13,14 @@ async function setup(selectedTeam: Team = new Team()) {
     },
   });
   const selected = vi.fn();
+  const sort = vi.fn();
 
   view.fixture.componentInstance.selected.subscribe(selected);
+  view.fixture.componentInstance.sort.subscribe(sort);
 
   return {
     selected,
+    sort,
     view,
   };
 }
@@ -37,15 +40,14 @@ describe('Teams', () => {
   });
 
   it('should show the selected team', async () => {
-    await setup(teams[1]);
+    const { view } = await setup(teams[1]);
 
-    expect(screen.getByText(`Selected team: ${teams[1].name}`)).toBeTruthy();
+    expect(view.container.textContent).toContain(`Selected team: ${teams[1].name}`);
   });
 
   it('should show when no team is selected', async () => {
-    await setup();
-
-    expect(screen.getByText('No team selected')).toBeTruthy();
+    const { view } = await setup();
+    expect(view.container.textContent).toContain('No team selected');
   });
 
   it('should emit the selected team key when a team is clicked', async () => {
@@ -54,5 +56,23 @@ describe('Teams', () => {
     fireEvent.click(screen.getByText(teams[1].name as string));
 
     expect(selected).toHaveBeenCalledWith(teams[1].publicKey);
+  });
+
+  it('should emit sort payload for field toggle', async () => {
+    const { sort } = await setup();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Sort field: name' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Execute' }));
+
+    expect(sort).toHaveBeenCalledWith({ key: 'poule', direction: undefined });
+  });
+
+  it('should emit sort payload for direction toggle', async () => {
+    const { sort } = await setup();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Sort direction: none' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Execute' }));
+
+    expect(sort).toHaveBeenCalledWith({ key: 'name', direction: 'asc' });
   });
 });

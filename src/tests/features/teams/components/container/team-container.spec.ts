@@ -8,7 +8,13 @@ import { teamFactory } from '../../../../shared/factories/team-factory';
 
 const teams = teamFactory.buildList(2);
 
-async function setup(): Promise<RenderResult<TeamContainer>> {
+type SetupResult = RenderResult<TeamContainer> & {
+  sortOn: ReturnType<typeof vi.fn>;
+};
+
+async function setup(): Promise<SetupResult> {
+  const sortOn = vi.fn();
+
   const view = await render(TeamContainer, {
     componentProviders: [
       {
@@ -17,7 +23,8 @@ async function setup(): Promise<RenderResult<TeamContainer>> {
           teams: signal(teams),
           selectedTeam: signal(teams[1]),
           title: 'TestValue',
-          setSelectedTeam: (key: string) => {},
+          setSelectedTeam: vi.fn<(key: string) => void>(),
+          sortOn,
         },
       },
     ],
@@ -27,7 +34,7 @@ async function setup(): Promise<RenderResult<TeamContainer>> {
   await view.fixture.whenStable();
   view.fixture.detectChanges();
 
-  return view;
+  return Object.assign(view, { sortOn }) as SetupResult;
 }
 
 describe('TeamContainer', () => {
@@ -56,5 +63,19 @@ describe('TeamContainer', () => {
     fixture.detectChanges();
     const result = ngMocks.input('app-teams', 'selectedTeam');
     expect(result).toEqual(teams[1]);
+  });
+
+  it('should forward sort events to the facade', async () => {
+    const { fixture, sortOn } = await setup();
+
+    ngMocks
+      .output<{ key: 'name' | 'poule'; direction?: 'asc' | 'desc' }>('app-teams', 'sort')
+      .emit({
+        key: 'poule',
+        direction: 'desc',
+      });
+    fixture.detectChanges();
+
+    expect(sortOn).toHaveBeenCalledWith({ key: 'poule', direction: 'desc' });
   });
 });

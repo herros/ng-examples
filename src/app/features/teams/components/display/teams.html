@@ -1,27 +1,24 @@
 @for (team of teams(); track team.publicKey) {
-  <p>
-    {{ team.poule }}:
-    <span (click)="clicked(team.publicKey)">{{ team.name }}</span>
-  </p>
+<p>
+  {{ team.poule }}:
+  <span role="button" tabindex="0" (click)="clicked(team.publicKey)" (keydown.enter)="clicked(team.publicKey)">
+    {{ team.name }}</span>
+</p>
 }
 
 <br />
 {{
-  selectedTeam().publicKey === null ? 'No team selected' : 'Selected team: ' + selectedTeam().name
+selectedTeam().publicKey === null ? 'No team selected' : 'Selected team: ' + selectedTeam().name
 }}
 <br />Sorting:
-<input
-  type="button"
-  [value]="sortField"
-  (click)="sortField = sortField === 'name' ? 'poule' : 'name'"
-/>
-<input
-  type="button"
-  [value]="sortDirection"
-  (click)="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'"
-/>
-<input
-  type="button"
-  value="Go"
-  (click)="sortOn.emit({ key: sortField, direction: sortDirection })"
-/>
+<button type="button" [attr.aria-label]="'Sort field: ' + sortField"
+  (click)="sortField = sortField === 'name' ? 'poule' : 'name'">
+  {{ sortField }}
+</button>
+
+<button type="button" [attr.aria-label]="'Sort direction: ' + (sortDirection ?? 'none')"
+  (click)="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'">
+  {{ sortDirection ?? 'none' }}
+</button>
+<button type="button" [attr.aria-label]="'Execute'"
+  (click)="sort.emit({ key: sortField, direction: sortDirection })">Go</button>

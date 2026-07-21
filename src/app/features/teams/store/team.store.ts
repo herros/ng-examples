@@ -12,6 +12,7 @@ export const TeamStore = signalStore(
   withTeamStoreComputed(),
   withHooks({
     onInit: (store): void => {
+      store.setSort('name', 'asc'); // Default sort by name ascending
       store.getTeams().catch((error) => {
         console.error('Error loading teams on store init:', error);
       });
