@@ -1,32 +1,27 @@
-import { computed } from '@angular/core';
+import { computed, Signal } from '@angular/core';
 import {
   patchState,
   signalStoreFeature,
   withComputed,
   withMethods,
   withState,
+  StateSignals,
 } from '@ngrx/signals';
 
 export type SortDirection = 'asc' | 'desc';
 
-// 2. Interface for the initial state of the feature
+// Interface for the initial state of the feature
 export interface SortState<T> {
   sortKey: keyof T | null;
   sortDirection: SortDirection;
 }
 
-type SortingStoreContract<T> = {
-  sortKey: () => keyof T | null;
-  sortDirection: () => SortDirection;
-};
-
-type SignalSelectorStore<T> = SortingStoreContract<T> & T[];
-
 /**
  * A reusable SignalStore feature to sort an array.
  * @param dataSelector A function that selects the signal array to be sorted from the store.
  */
-export function withSorting<T>(dataSelector: (store: any) => () => T[]) {
+export function withSorting<T, TState>(
+  dataSelector: (state: StateSignals<TState>) => Signal<T[]>) {
   return signalStoreFeature(
     // Add the default sort state to the store
     withState<SortState<T>>({
@@ -36,7 +31,7 @@ export function withSorting<T>(dataSelector: (store: any) => () => T[]) {
 
     // Add a computed signal for the sorted data
     withComputed((store) => {
-      const data = dataSelector(store);
+      const data = dataSelector(store as StateSignals<TState>);
 
       return {
         sortedData: computed(() => {

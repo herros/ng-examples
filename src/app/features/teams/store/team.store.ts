@@ -1,13 +1,14 @@
 import { withSorting } from '@app/shared/storefeatures/with-sorting';
 import { Team } from '@models/team';
-import { signalStore, withHooks } from '@ngrx/signals';
+import { signalStore, withHooks, SignalState, StateSignals } from '@ngrx/signals';
 import { withTeamStoreComputed } from './team-store.computed';
 import { withTeamStoreMethods } from './team-store.methods';
-import { withTeamStoreState } from './team-store.state';
+import { ITeamState, withTeamStoreState } from './team-store.state';
+import { Signal } from '@angular/core';
 
 export const TeamStore = signalStore(
   withTeamStoreState(),
-  withSorting<Team>((store) => store.teams),
+  withSorting<Team, ITeamState>((store) => store.teams),
   withTeamStoreMethods(),
   withTeamStoreComputed(),
   withHooks({
