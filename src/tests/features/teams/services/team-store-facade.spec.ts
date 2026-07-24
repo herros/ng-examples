@@ -45,14 +45,11 @@ describe('TeamStoreFacade', () => {
 
   it('should create', async () => {
     const { facade } = await setup();
-
     expect(facade).toBeTruthy();
   });
 
   it('should expose the teams signal', async () => {
     const { facade } = await setup();
-    // const teams1 = [...teams].sort((a, b) => (a.name as string).localeCompare(b.name as string));
-
     expect(facade.teams()).toEqual(teams);
   });
 

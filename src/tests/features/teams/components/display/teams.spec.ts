@@ -75,4 +75,14 @@ describe('Teams', () => {
 
     expect(sort).toHaveBeenCalledWith({ key: 'name', direction: 'asc' });
   });
+
+  it('should emit sort payload with desc after two direction toggles', async () => {
+    const { sort } = await setup();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Sort direction: none' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Sort direction: asc' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Execute' }));
+
+    expect(sort).toHaveBeenCalledWith({ key: 'name', direction: 'desc' });
+  });
 });

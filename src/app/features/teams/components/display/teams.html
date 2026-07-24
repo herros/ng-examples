@@ -1,7 +1,8 @@
 @for (team of teams(); track team.publicKey) {
 <p>
   {{ team.poule }}:
-  <span role="button" tabindex="0" (click)="clicked(team.publicKey)" (keydown.enter)="clicked(team.publicKey)">
+  <span role="button" tabindex="0" (click)="clicked(team.publicKey)" (keydown.enter)="clicked(team.publicKey)"
+    (keydown.space)="clicked(team.publicKey)">
     {{ team.name }}</span>
 </p>
 }

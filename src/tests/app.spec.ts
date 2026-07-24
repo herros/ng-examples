@@ -1,5 +1,5 @@
 import { App } from '@app/app';
-import { render } from '@testing-library/angular';
+import { fireEvent, render, screen } from '@testing-library/angular';
 
 describe('App', () => {
   it('should create the app', async () => {
@@ -13,5 +13,31 @@ describe('App', () => {
     const teamsHost = container.querySelector('app-teams');
 
     expect(teamsHost?.textContent).toContain('No team selected');
+  });
+
+  it('should render teams page title from container initialization', async () => {
+    await render(App);
+
+    expect(screen.getByRole('heading', { level: 1, name: 'Teams' })).toBeTruthy();
+  });
+
+  it('should update selected label after clicking a team name', async () => {
+    await render(App);
+
+    const teamButtons = screen.getAllByRole('button').filter((button) => {
+      const label = button.getAttribute('aria-label');
+      return label !== 'Execute' && !label?.startsWith('Sort ');
+    });
+    fireEvent.click(teamButtons[0]);
+
+    expect(screen.getByText(/Selected team:/)).toBeTruthy();
+  });
+
+  it('should keep rendering sorting controls', async () => {
+    await render(App);
+
+    expect(screen.getByRole('button', { name: 'Sort field: name' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Sort direction: none' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Execute' })).toBeTruthy();
   });
 });
