@@ -2,7 +2,7 @@ import { computed, Signal } from '@angular/core';
 import {
   patchState,
   signalStoreFeature,
-  StateSignals,
+  // StateSignals,
   withComputed,
   withMethods,
   withState,
@@ -16,18 +16,19 @@ export interface SortState<T> {
   sortDirection: SortDirection;
 }
 
-type SortContract<T, TState> = StateSignals<TState> & {
-  sortKey: Signal<keyof T | null>;
-  sortDirection: Signal<SortDirection>;
-};
+// type SortContract<T, TState> = StateSignals<TState> & {
+//   sortKey: Signal<keyof T | null>;
+//   sortDirection: Signal<SortDirection>;
+// };
 
 /**
  * A reusable SignalStore feature to sort an array.
  * @param dataSelector A function that selects the signal array to be sorted from the store.
  */
-export function withSorting<T, TState extends object>(
-  dataSelector: (store: SortContract<T, TState>) => Signal<T[]>,
-) {
+// export function withSorting<T, TState extends object>(
+//   dataSelector: (store: SortContract<T, TState>) => Signal<T[]>,
+// ) {
+export function withSorting<T>(data: Signal<T[]>) {
   return signalStoreFeature(
     // Add the default sort state to the store
     withState<SortState<T>>({
@@ -37,7 +38,7 @@ export function withSorting<T, TState extends object>(
 
     // Add a computed signal for the sorted data
     withComputed((store) => {
-      const data = dataSelector(store as SortContract<T, TState>);
+      // const data = dataSelector(store as SortContract<T, TState>);
 
       return {
         sortedData: computed(() => {

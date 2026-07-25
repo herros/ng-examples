@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { withSorting } from '@app/shared/storefeatures/with-sorting';
-import { signalStore, withState } from '@ngrx/signals';
+import { signalStore, withFeature, withState } from '@ngrx/signals';
 
-type Item = {
+interface Item {
   name: string | null;
   score: number | null;
 };
@@ -10,7 +10,8 @@ type Item = {
 function setup(initialItems: Item[]) {
   const SortingStore = signalStore(
     withState<{ items: Item[] }>({ items: initialItems }),
-    withSorting<Item, { items: Item[] }>((store) => store.items),
+    // withSorting<Item, { items: Item[] }>((store) => store.items),
+    withFeature((store) => withSorting<Item>(store.items)),
   );
 
   TestBed.configureTestingModule({
