@@ -21,4 +21,28 @@ export class Teams {
       this.selected.emit(key);
     }
   }
+
+  protected sortBy(key: keyof Team): void {
+    if (this.sortField !== key) {
+      this.sortField = key;
+      this.sortDirection = 'asc';
+    } else if (this.sortDirection === undefined) {
+      this.sortDirection = 'asc';
+    } else if (this.sortDirection === 'asc') {
+      this.sortDirection = 'desc';
+    } else {
+      this.sortDirection = undefined;
+      this.sortField = 'name';
+    }
+
+    this.sort.emit({ key: this.sortField, direction: this.sortDirection });
+  }
+
+  protected getSortArrow(key: keyof Team): string {
+    if (this.sortField !== key) {
+      return '↕';
+    }
+
+    return this.sortDirection === 'asc' ? '↑' : this.sortDirection === 'desc' ? '↓' : '↕';
+  }
 }

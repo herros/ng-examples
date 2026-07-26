@@ -58,31 +58,21 @@ describe('Teams', () => {
     expect(selected).toHaveBeenCalledWith(teams[1].publicKey);
   });
 
-  it('should emit sort payload for field toggle', async () => {
+  it('should emit sort payload when a header is clicked', async () => {
     const { sort } = await setup();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Sort field: name' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Execute' }));
+    fireEvent.click(screen.getByRole('button', { name: /sort by poule/i }));
 
-    expect(sort).toHaveBeenCalledWith({ key: 'poule', direction: undefined });
+    expect(sort).toHaveBeenCalledWith({ key: 'poule', direction: 'asc' });
   });
 
-  it('should emit sort payload for direction toggle', async () => {
+  it('should toggle to desc when the same header is clicked again', async () => {
     const { sort } = await setup();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Sort direction: none' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Execute' }));
+    const header = screen.getByRole('button', { name: /sort by team/i });
+    fireEvent.click(header);
+    fireEvent.click(header);
 
-    expect(sort).toHaveBeenCalledWith({ key: 'name', direction: 'asc' });
-  });
-
-  it('should emit sort payload with desc after two direction toggles', async () => {
-    const { sort } = await setup();
-
-    fireEvent.click(screen.getByRole('button', { name: 'Sort direction: none' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Sort direction: asc' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Execute' }));
-
-    expect(sort).toHaveBeenCalledWith({ key: 'name', direction: 'desc' });
+    expect(sort).toHaveBeenLastCalledWith({ key: 'name', direction: 'desc' });
   });
 });
