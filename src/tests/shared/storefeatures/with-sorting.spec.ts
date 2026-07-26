@@ -5,7 +5,7 @@ import { signalStore, withFeature, withState } from '@ngrx/signals';
 interface Item {
   name: string | null;
   score: number | null;
-};
+}
 
 function setup(initialItems: Item[]) {
   const SortingStore = signalStore(

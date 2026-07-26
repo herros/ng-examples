@@ -3,7 +3,7 @@ import { Team } from '@models/team';
 import { signalStore, withFeature, withHooks } from '@ngrx/signals';
 import { withTeamStoreComputed } from './team-store.computed';
 import { withTeamStoreMethods } from './team-store.methods';
-import { ITeamState, withTeamStoreState } from './team-store.state';
+import { withTeamStoreState } from './team-store.state';
 
 export const TeamStore = signalStore(
   withTeamStoreState(),
