@@ -11,7 +11,7 @@ export const TeamStore = signalStore(
   // which allows us to pass the teams signal from the store to the withSorting feature.
   // creating a better and cleaner separation
   withFeature((store) => withSorting<Team>(store.teams)),
-  // same thing below (in comment) but without the factory, which is less clean 
+  // same thing below (in comment) but without the factory, which is less clean
   // and less flexible because it give a lot of typescript issues with types
   // withSorting<Team, ITeamState>((store) => store.teams),
   withTeamStoreMethods(),
