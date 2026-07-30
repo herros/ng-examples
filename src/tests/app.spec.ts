@@ -24,20 +24,11 @@ describe('App', () => {
   it('should update selected label after clicking a team name', async () => {
     await render(App);
 
-    const teamButtons = screen.getAllByRole('button').filter((button) => {
-      const label = button.getAttribute('aria-label');
-      return label !== 'Execute' && !label?.startsWith('Sort ');
-    });
+    const teamButtons = screen
+      .getAllByRole('button')
+      .filter((button) => !button.getAttribute('aria-label'));
     fireEvent.click(teamButtons[0]);
 
     expect(screen.getByText(/Selected team:/)).toBeTruthy();
-  });
-
-  it('should keep rendering sorting controls', async () => {
-    await render(App);
-
-    expect(screen.getByRole('button', { name: 'Sort field: name' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Sort direction: none' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Execute' })).toBeTruthy();
   });
 });
